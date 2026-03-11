@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{%block title%}{{post.title}}{% endblock %}
+{% block content %}
+
+    <h2>{{ post.title }}</h2>
+    <small>By {{ post.author }} on {{ post.created_at }}</small>
+    <p>{{ post.content}}</p>
+    {%if user == post.author %} 
+    <a class ='nav-link' href="{% url 'post_update' post.id %}">Edit Post</a>
+    <a class ='nav-link' href="{% url 'post_delete' post.id %}">Delete Post</a>
+    {%endif %}
+
+{% endblock %}
