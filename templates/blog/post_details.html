@@ -8,7 +8,6 @@
         {% if post.image %}
             <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
         {% endif %}
-
         <div class="card-body">
             <h2 class="card-title">{{ post.title }}</h2>
             <p class="text-muted mb-2">
@@ -23,6 +22,40 @@
                     <a class="btn btn-danger btn-sm" href="{% url 'post_delete' post.id %}">Delete Post</a>
                 </div>
             {% endif %}
+
+            <hr>
+
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'like_post' post.id %}">
+                {% csrf_token %}
+                {% if user_liked %}
+                    <button class="btn btn-danger">❤️ Unlike ({{ like_count }})</button>
+                {% else %}
+                    <button class="btn btn-outline-danger">❤️ Like ({{ like_count }})</button>
+                {% endif %}
+            </form>
+            {% else %}
+                <p>Likes: {{ like_count }}. <a href="{% url 'login' %}">Login</a> to like.</p>
+            {% endif %}
+
+            <hr>
+            <h4>Comments ({{ comments.count }})</h4>
+            {% for comment in comments %}
+                <div class="border p-2 mb-2">{{ comment.commenter }}</div>
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                <textarea name="comment" class="form-control mb-2" placeholder="Write a comment"></textarea>
+                <button class="btn btn-primary">Comment</button>
+            </form>
+            {% else %}
+                <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+            {% endif %}
+
         </div>
     </div>
 </div>
